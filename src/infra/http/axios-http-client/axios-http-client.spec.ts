@@ -1,5 +1,5 @@
 import { AxiosHttpClient } from '@/infra/http/axios-http-client/axios.http-client'
-import { mockPostRequest } from '@/infra/http/axios-http-client/test'
+import { mockPostRequest } from '@/infra/test'
 import axios from 'axios'
 import faker from 'faker'
 
