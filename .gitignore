@@ -1,3 +1,4 @@
 /node_modules
 .vsCode
 coverage
+public/js
