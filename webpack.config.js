@@ -3,14 +3,14 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
 module.exports = {
   mode: 'development',
-  entry: '/src/main/index.tsx',
+  entry: './src/main/index.tsx',
   output: {
     path: path.join(__dirname, 'public/js'),
     publicPath: 'public/js',
-    fileName: 'bundle.js'
+    filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['ts', 'tsx', 'js', 'scss'],
+    extensions: ['.ts', '.tsx', '.js', '.scss'],
     alias: {
       '@' : path.join(__dirname, 'src')
     }
@@ -20,7 +20,7 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         loader: 'ts-loader',
-        excluse: /node_modules/
+        exclude: /node_modules/
       },
       {
         test: /\.scss/,
@@ -47,8 +47,8 @@ module.exports = {
     historyApiFallback: true
   },
   externals: {
-    react: 'react',
-    'react-dom': 'reactDOM'
+    react: 'React',
+    'react-dom': 'ReactDOM'
   },
   plugins: [
     new CleanWebpackPlugin()
