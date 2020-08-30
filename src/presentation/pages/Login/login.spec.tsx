@@ -43,7 +43,7 @@ describe('Login', () => {
     expect((sut.getByTestId('submit-button') as HTMLButtonElement).disabled).toBe(true)
   })
 
-  it('', () => {
+  it('should call validation with correct value on email input change', () => {
     const { sut, validationSpy } = makeSut()
     const email = faker.internet.email()
     const emailInput = sut.getByTestId('email')
