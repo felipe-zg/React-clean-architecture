@@ -50,4 +50,12 @@ describe('Login', () => {
     fireEvent.input(emailInput, { target: { value: email } })
     expect(validationSpy.input).toEqual({ email })
   })
+
+  it('should call validation with correct value on password input change', () => {
+    const { sut, validationSpy } = makeSut()
+    const password = faker.internet.password()
+    const passwordInput = sut.getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: password } })
+    expect(validationSpy.input).toEqual({ password })
+  })
 })
