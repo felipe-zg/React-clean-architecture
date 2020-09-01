@@ -86,4 +86,14 @@ describe('Login', () => {
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
     expect((sut.getByTestId('submit-button') as HTMLButtonElement).disabled).toBe(false)
   })
+
+  it('should show spinner on form submition', () => {
+    const { sut } = makeSut()
+    const emailInput = sut.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+    const passwordInput = sut.getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+    fireEvent.click(sut.getByTestId('submit-button'))
+    expect(sut.getByTestId('spinner')).toBeTruthy()
+  })
 })
