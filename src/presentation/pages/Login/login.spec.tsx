@@ -109,4 +109,11 @@ describe('Login', () => {
       password
     })
   })
+
+  it('should call authentication only once', () => {
+    const { sut, authenticationSpy } = makeSut()
+    simulateValidForm(sut)
+    simulateValidForm(sut)
+    expect(authenticationSpy.callsCount).toBe(1)
+  })
 })
