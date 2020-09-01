@@ -1,5 +1,6 @@
 import React from 'react'
 import faker from 'faker'
+import 'jest-localstorage-mock'
 import { render, fireEvent, RenderResult, cleanup, waitFor } from '@testing-library/react'
 
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
@@ -50,6 +51,9 @@ const simulateStatusForField = (sut: RenderResult, fieldName: string, validation
 
 describe('Login', () => {
   beforeEach(cleanup)
+  beforeEach(() => {
+    localStorage.clear()
+  })
 
   it('should not render spinner and error message on mount', () => {
     const validationError = faker.random.words()
@@ -135,5 +139,12 @@ describe('Login', () => {
     await waitFor(() => errorWrap)
     expect(sut.getByTestId('main-error').textContent).toBe(error.message)
     expect(errorWrap.childElementCount).toBe(1)
+  })
+
+  it('should ass access token to local storage if authentication succeeds', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    simulateValidForm(sut)
+    await waitFor(() => sut.getByTestId('form'))
+    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
   })
 })
