@@ -1,13 +1,26 @@
 import React from 'react'
+import faker from 'faker'
 import { render, fireEvent, RenderResult, cleanup } from '@testing-library/react'
 
+import { Authentication, AuthenticationParams } from '@/domain/useCases'
+import { mockAccountModel } from '@/domain/test'
+import { AccountModel } from '@/domain/models'
 import { ValidationStub } from '@/presentation/test'
 import Login from '@/presentation/pages/Login'
 
-import faker from 'faker'
+class AuthenticationSpy implements Authentication {
+  account = mockAccountModel()
+  params: AuthenticationParams
+
+  async auth(params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params
+    return Promise.resolve(this.account)
+  }
+}
 
 type SutTypes = {
   sut: RenderResult
+  authenticationSpy: AuthenticationSpy
 }
 
 type SutParams = {
@@ -17,9 +30,11 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
-  const sut = render(<Login validation={validationStub}/>)
+  const authenticationSpy = new AuthenticationSpy()
+  const sut = render(<Login validation={validationStub} authentication={authenticationSpy}/>)
   return {
-    sut
+    sut,
+    authenticationSpy
   }
 }
 
@@ -95,5 +110,20 @@ describe('Login', () => {
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
     fireEvent.click(sut.getByTestId('submit-button'))
     expect(sut.getByTestId('spinner')).toBeTruthy()
+  })
+
+  it('should call authentication with correct parameters on form submition', () => {
+    const { sut, authenticationSpy } = makeSut()
+    const emailInput = sut.getByTestId('email')
+    const email = faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: email } })
+    const passwordInput = sut.getByTestId('password')
+    const password = faker.internet.password()
+    fireEvent.input(passwordInput, { target: { value: password } })
+    fireEvent.click(sut.getByTestId('submit-button'))
+    expect(authenticationSpy.params).toEqual({
+      email,
+      password
+    })
   })
 })
