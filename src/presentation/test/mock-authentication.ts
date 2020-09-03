@@ -1,4 +1,4 @@
-import { Authentication, AuthenticationParams } from '@/domain/useCases'
+import { Authentication, AuthenticationParams } from '@/domain/use-cases'
 import { mockAccountModel } from '@/domain/test'
 import { AccountModel } from '@/domain/models'
 
