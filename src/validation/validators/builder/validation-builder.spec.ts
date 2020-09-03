@@ -2,6 +2,7 @@ import faker from 'faker'
 import { ValidationBuilder as sut } from './validation-builder'
 import { RequiredFieldValidation } from '../required-field/required-field-validation'
 import { EmailValidation } from '../email/email-validation'
+import { MinLengthValidation } from '../min-length/min-length-validation'
 
 describe('ValidationBuilder', () => {
   it('Should return RequiredFieldError', () => {
@@ -14,5 +15,12 @@ describe('ValidationBuilder', () => {
     const field = faker.database.column()
     const validators = sut.field(field).email().build()
     expect(validators).toEqual([new EmailValidation(field)])
+  })
+
+  it('Should return MinLengthValidation', () => {
+    const field = faker.database.column()
+    const length = faker.random.number()
+    const validators = sut.field(field).min(length).build()
+    expect(validators).toEqual([new MinLengthValidation(field, length)])
   })
 })
