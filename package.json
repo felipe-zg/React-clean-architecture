@@ -10,7 +10,7 @@
     "test:watch": "yarn test -- --watch",
     "test:staged": "yarn test -- --findRelatedTests",
     "test:ci": "yarn test -- --coverage",
-    "coveralls": "yarn test:ci && < coveralls coverage/lcov.info",
+    "coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
     "check-versions": "npm-check -u -s"
   },
   "devDependencies": {
