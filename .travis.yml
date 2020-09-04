@@ -1,0 +1,5 @@
+language: node_jsnode_js:
+  - 12
+script:
+  - eslint 'src/**'
+  - yarn test:ci
