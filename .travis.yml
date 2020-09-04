@@ -1,4 +1,5 @@
-language: node_jsnode_js:
+language: node_js
+node_js:
   - 12
 script:
   - eslint 'src/**'
