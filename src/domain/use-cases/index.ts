@@ -1,2 +1,2 @@
 export * from './authentication'
-export * from './local-save-access-token'
+export * from './save-access-token'

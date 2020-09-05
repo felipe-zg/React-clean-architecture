@@ -6,12 +6,12 @@ import Context from '@/presentation/context/form/form-context'
 import { LoginHeader, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './styles.scss'
 import { Validation } from '@/presentation/protocols/validation'
-import { Authentication, LocalSaveAccessToken } from '@/domain/use-cases'
+import { Authentication, SaveAccessToken } from '@/domain/use-cases'
 
 type Props = {
   validation: Validation
   authentication: Authentication
-  saveAccessToken: LocalSaveAccessToken
+  saveAccessToken: SaveAccessToken
 }
 
 const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }: Props) => {

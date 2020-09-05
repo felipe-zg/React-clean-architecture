@@ -1,6 +1,6 @@
-import { LocalSaveAccessToken } from '@/domain/use-cases'
+import { SaveAccessToken } from '@/domain/use-cases'
 
-export class SaveAccessTokenMock implements LocalSaveAccessToken {
+export class SaveAccessTokenMock implements SaveAccessToken {
   accessToken: string
 
   // eslint-disable-next-line @typescript-eslint/require-await
