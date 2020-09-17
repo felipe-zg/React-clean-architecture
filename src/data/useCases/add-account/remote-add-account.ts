@@ -19,6 +19,7 @@ export class RemoteAddAccount implements AddAccount {
       case HttpStatusCode.ok:
         return httpResponse.body
       case HttpStatusCode.badRequest:
+      case HttpStatusCode.serverError:
         throw new UnexpectedError()
       default:
         return null
