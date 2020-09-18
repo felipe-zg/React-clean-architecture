@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { render, fireEvent, RenderResult, cleanup, waitFor } from '@testing-library/react'
 
-import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock, helper } from '@/presentation/test'
 import { Login } from '@/presentation/pages'
 import { InvalidCredentialsError } from '@/domain/errors'
 
@@ -55,16 +55,6 @@ const simulateValidForm = async (sut: RenderResult, email = faker.internet.email
   await waitFor(() => form)
 }
 
-const testStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
-  const fieldStatus = sut.getByTestId(`${fieldName}-status`)
-  expect(fieldStatus.title).toBe(validationError || 'Tudo certo!')
-  expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
-}
-
-const testErrorWrapChildCount = (sut: RenderResult, count: number): void => {
-  expect((sut.getByTestId('error-wrap')).childElementCount).toBe(count)
-}
-
 const testElementsTextContent = (sut: RenderResult, elementTestId: string, text: string): void => {
   expect(sut.getByTestId(elementTestId).textContent).toBe(text)
 }
@@ -73,53 +63,49 @@ const testElementExists = (sut: RenderResult, elementTestId: string): void => {
   expect(sut.getByTestId(elementTestId)).toBeTruthy()
 }
 
-const testButtonIsDisabled = (sut: RenderResult, elementTestId: string, isDisabled: boolean): void => {
-  expect((sut.getByTestId(elementTestId) as HTMLButtonElement).disabled).toBe(isDisabled)
-}
-
 describe('Login', () => {
   beforeEach(cleanup)
 
   it('should not render spinner and error message on mount', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
-    testErrorWrapChildCount(sut, 0)
-    testStatusForField(sut, 'email', validationError)
-    testStatusForField(sut, 'password', validationError)
-    testButtonIsDisabled(sut, 'submit-button', true)
+    helper.testChildCount(sut, 'error-wrap', 0)
+    helper.testStatusForField(sut, 'email', validationError)
+    helper.testStatusForField(sut, 'password', validationError)
+    helper.testButtonIsDisabled(sut, 'submit-button', true)
   })
 
   it('should show error message if email validation fails ', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
     fillEmailField(sut)
-    testStatusForField(sut, 'email', validationError)
+    helper.testStatusForField(sut, 'email', validationError)
   })
 
   it('should show error message if password validation fails ', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
     fillPasswordField(sut)
-    testStatusForField(sut, 'password', validationError)
+    helper.testStatusForField(sut, 'password', validationError)
   })
 
   it('should show valid status if email validation succeds ', () => {
     const { sut } = makeSut()
     fillEmailField(sut)
-    testStatusForField(sut, 'email')
+    helper.testStatusForField(sut, 'email')
   })
 
   it('should show valid status if password validation succeds ', () => {
     const { sut } = makeSut()
     fillPasswordField(sut)
-    testStatusForField(sut, 'password')
+    helper.testStatusForField(sut, 'password')
   })
 
   it('should enable submit button if validation succeds ', () => {
     const { sut } = makeSut()
     fillEmailField(sut)
     fillPasswordField(sut)
-    testButtonIsDisabled(sut, 'submit-button', false)
+    helper.testButtonIsDisabled(sut, 'submit-button', false)
   })
 
   it('should show spinner on form submition', async() => {
@@ -159,7 +145,7 @@ describe('Login', () => {
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
     await simulateValidForm(sut)
     testElementsTextContent(sut, 'main-error', error.message)
-    testErrorWrapChildCount(sut, 1)
+    helper.testChildCount(sut, 'error-wrap', 1)
   })
 
   it('should call SaveAccessToken if authentication succeeds', async () => {
