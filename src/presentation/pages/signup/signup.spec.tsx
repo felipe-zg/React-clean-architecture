@@ -86,4 +86,13 @@ describe('Signup', () => {
     helper.fillField(sut, 'passwordConfirmation')
     helper.testStatusForField(sut, 'passwordConfirmation')
   })
+
+  it('should enable submit button if validation succeds ', () => {
+    const { sut } = makeSut()
+    helper.fillField(sut, 'name')
+    helper.fillField(sut, 'email')
+    helper.fillField(sut, 'password')
+    helper.fillField(sut, 'passwordConfirmation')
+    helper.testButtonIsDisabled(sut, 'submit-button', false)
+  })
 })
