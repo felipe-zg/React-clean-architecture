@@ -61,9 +61,9 @@ describe('Signup', () => {
     const { sut } = makeSut({ validationError })
     helper.testChildCount(sut, 'error-wrap', 0)
     helper.testStatusForField(sut, 'name', validationError)
-    helper.testStatusForField(sut, 'email', 'campo obrigatório')
-    helper.testStatusForField(sut, 'password', 'campo obrigatório')
-    helper.testStatusForField(sut, 'passwordConfirmation', 'campo obrigatório')
+    helper.testStatusForField(sut, 'email', validationError)
+    helper.testStatusForField(sut, 'password', validationError)
+    helper.testStatusForField(sut, 'passwordConfirmation', validationError)
     helper.testButtonIsDisabled(sut, 'submit-button', true)
   })
 
