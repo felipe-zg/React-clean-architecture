@@ -44,6 +44,10 @@ const Signup: React.FC<Props> = ({ validation }: Props) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
+    setState({
+      ...state,
+      isLoading: true
+    })
   }
 
   return (
