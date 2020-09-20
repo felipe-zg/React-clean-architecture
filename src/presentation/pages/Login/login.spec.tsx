@@ -72,10 +72,6 @@ const testElementsTextContent = (
   expect(sut.getByTestId(elementTestId).textContent).toBe(text)
 }
 
-const testElementExists = (sut: RenderResult, elementTestId: string): void => {
-  expect(sut.getByTestId(elementTestId)).toBeTruthy()
-}
-
 describe('Login', () => {
   beforeEach(cleanup)
 
@@ -124,7 +120,7 @@ describe('Login', () => {
   it('should show spinner on form submition', async () => {
     const { sut } = makeSut()
     await simulateValidForm(sut)
-    testElementExists(sut, 'spinner')
+    helper.testElementExists(sut, 'spinner')
   })
 
   it('should call authentication with correct parameters on form submition', async () => {

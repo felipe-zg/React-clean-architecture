@@ -53,10 +53,6 @@ const simulateValidFormSubmission = async (
   await waitFor(() => form)
 }
 
-const testElementExists = (sut: RenderResult, elementTestId: string): void => {
-  expect(sut.getByTestId(elementTestId)).toBeTruthy()
-}
-
 describe('Signup', () => {
   beforeEach(cleanup)
 
@@ -132,6 +128,6 @@ describe('Signup', () => {
   it('should show spinner on form submition', async () => {
     const { sut } = makeSut()
     await simulateValidFormSubmission(sut)
-    testElementExists(sut, 'spinner')
+    helper.testElementExists(sut, 'spinner')
   })
 })
