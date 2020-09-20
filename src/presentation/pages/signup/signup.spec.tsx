@@ -1,19 +1,38 @@
 import React from 'react'
-import { helper } from '@/presentation/test'
-import { cleanup, render, RenderResult } from '@testing-library/react'
+import faker from 'faker'
+import { helper, ValidationStub } from '@/presentation/test'
+import {
+  cleanup,
+  render,
+  RenderResult,
+  fireEvent
+} from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
 
 type SutTypes = {
   sut: RenderResult
 }
 
-const makeSut = (): SutTypes => {
-  const sut = render(
-    <SignUp />
-  )
+type SutParams = {
+  validationError: string
+}
+
+const makeSut = (params?: SutParams): SutTypes => {
+  const validationStub = new ValidationStub()
+  validationStub.errorMessage = params?.validationError
+  const sut = render(<SignUp validation={validationStub} />)
   return {
     sut
   }
+}
+
+const fillField = (
+  sut: RenderResult,
+  field: string,
+  fieldValue = faker.random.words()
+): void => {
+  const input = sut.getByTestId(field)
+  fireEvent.input(input, { target: { value: fieldValue } })
 }
 
 describe('Signup', () => {
@@ -21,12 +40,19 @@ describe('Signup', () => {
 
   it('should start with correct states', () => {
     const validationError = 'campo obrigatório'
-    const { sut } = makeSut()
+    const { sut } = makeSut({ validationError })
     helper.testChildCount(sut, 'error-wrap', 0)
     helper.testStatusForField(sut, 'name', validationError)
-    helper.testStatusForField(sut, 'email', validationError)
-    helper.testStatusForField(sut, 'password', validationError)
-    helper.testStatusForField(sut, 'passwordConfirmation', validationError)
+    helper.testStatusForField(sut, 'email', 'campo obrigatório')
+    helper.testStatusForField(sut, 'password', 'campo obrigatório')
+    helper.testStatusForField(sut, 'passwordConfirmation', 'campo obrigatório')
     helper.testButtonIsDisabled(sut, 'submit-button', true)
+  })
+
+  it('should show error message if name validation fails ', () => {
+    const validationError = faker.random.words()
+    const { sut } = makeSut({ validationError })
+    fillField(sut, 'name')
+    helper.testStatusForField(sut, 'name', validationError)
   })
 })
