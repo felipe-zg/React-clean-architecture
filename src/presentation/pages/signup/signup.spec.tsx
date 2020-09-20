@@ -21,6 +21,13 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
+const simulateValidForm = (sut: RenderResult): void => {
+  helper.fillField(sut, 'name')
+  helper.fillField(sut, 'email')
+  helper.fillField(sut, 'password')
+  helper.fillField(sut, 'passwordConfirmation')
+}
+
 describe('Signup', () => {
   beforeEach(cleanup)
 
@@ -89,10 +96,7 @@ describe('Signup', () => {
 
   it('should enable submit button if validation succeds ', () => {
     const { sut } = makeSut()
-    helper.fillField(sut, 'name')
-    helper.fillField(sut, 'email')
-    helper.fillField(sut, 'password')
-    helper.fillField(sut, 'passwordConfirmation')
+    simulateValidForm(sut)
     helper.testButtonIsDisabled(sut, 'submit-button', false)
   })
 })
