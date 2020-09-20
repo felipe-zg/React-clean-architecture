@@ -55,4 +55,11 @@ describe('Signup', () => {
     helper.fillField(sut, 'password')
     helper.testStatusForField(sut, 'password', validationError)
   })
+
+  it('should show error message if passwordConfirmation validation fails ', () => {
+    const validationError = faker.random.words()
+    const { sut } = makeSut({ validationError })
+    helper.fillField(sut, 'passwordConfirmation')
+    helper.testStatusForField(sut, 'passwordConfirmation', validationError)
+  })
 })
