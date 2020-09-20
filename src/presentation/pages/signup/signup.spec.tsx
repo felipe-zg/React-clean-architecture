@@ -31,23 +31,21 @@ const simulateValidForm = (
   sut: RenderResult,
   name?: string,
   email?: string,
-  password?: string,
-  passwordConfirmation?: string
+  password?: string
 ): void => {
   helper.fillField(sut, 'name', name)
   helper.fillField(sut, 'email', email)
   helper.fillField(sut, 'password', password)
-  helper.fillField(sut, 'passwordConfirmation', passwordConfirmation)
+  helper.fillField(sut, 'passwordConfirmation', password)
 }
 
 const simulateValidFormSubmission = async (
   sut: RenderResult,
-  name = faker.random.words(),
+  name = faker.name.findName(),
   email = faker.internet.email(),
-  password = faker.internet.password(),
-  passwordConfirmation = faker.internet.password()
+  password = faker.internet.password()
 ): Promise<void> => {
-  simulateValidForm(sut, name, email, password, passwordConfirmation)
+  simulateValidForm(sut, name, email, password)
   const form = sut.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
