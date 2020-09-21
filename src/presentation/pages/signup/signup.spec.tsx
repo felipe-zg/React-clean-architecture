@@ -134,7 +134,7 @@ describe('Signup', () => {
     helper.testElementExists(sut, 'spinner')
   })
 
-  it('should call authentication with correct parameters on form submition', async () => {
+  it('should call AddAccount with correct parameters on form submition', async () => {
     const { sut, addAccountSpy } = makeSut()
     const name = faker.name.findName()
     const email = faker.internet.email()
@@ -146,5 +146,12 @@ describe('Signup', () => {
       password,
       passwordConfirmation: password
     })
+  })
+
+  it('should call AddAccount only once', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    await simulateValidFormSubmission(sut)
+    await simulateValidFormSubmission(sut)
+    expect(addAccountSpy.callsCount).toBe(1)
   })
 })
