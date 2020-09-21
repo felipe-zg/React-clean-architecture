@@ -1,6 +1,6 @@
 import React from 'react'
 import faker from 'faker'
-import { helper, ValidationStub } from '@/presentation/test'
+import { AddAccountSpy, helper, ValidationStub } from '@/presentation/test'
 import {
   cleanup,
   render,
@@ -12,6 +12,7 @@ import { SignUp } from '@/presentation/pages'
 
 type SutTypes = {
   sut: RenderResult
+  addAccountSpy: AddAccountSpy
 }
 
 type SutParams = {
@@ -21,9 +22,13 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
-  const sut = render(<SignUp validation={validationStub} />)
+  const addAccountSpy = new AddAccountSpy()
+  const sut = render(
+    <SignUp validation={validationStub} addAccount={addAccountSpy} />
+  )
   return {
-    sut
+    sut,
+    addAccountSpy
   }
 }
 
@@ -127,5 +132,19 @@ describe('Signup', () => {
     const { sut } = makeSut()
     await simulateValidFormSubmission(sut)
     helper.testElementExists(sut, 'spinner')
+  })
+
+  it('should call authentication with correct parameters on form submition', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const name = faker.name.findName()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    await simulateValidFormSubmission(sut, name, email, password)
+    expect(addAccountSpy.params).toEqual({
+      name,
+      email,
+      password,
+      passwordConfirmation: password
+    })
   })
 })
