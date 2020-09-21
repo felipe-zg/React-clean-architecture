@@ -12,6 +12,7 @@ import Context from '@/presentation/context/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddAccount } from '@/domain/use-cases'
 import { stat } from 'fs/promises'
+import { EmailAlreadyExistsError } from '@/domain/errors'
 
 type Props = {
   validation: Validation
@@ -58,18 +59,26 @@ const Signup: React.FC<Props> = ({ validation, addAccount }: Props) => {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading || isFormInvalid()) return
-    setState({
-      ...state,
-      isLoading: true
-    })
+    try {
+      if (state.isLoading || isFormInvalid()) return
+      setState({
+        ...state,
+        isLoading: true
+      })
 
-    await addAccount.add({
-      name: state.name,
-      email: state.email,
-      password: state.password,
-      passwordConfirmation: state.passwordConfirmation
-    })
+      await addAccount.add({
+        name: state.name,
+        email: state.email,
+        password: state.password,
+        passwordConfirmation: state.passwordConfirmation
+      })
+    } catch (error) {
+      setState({
+        ...state,
+        isLoading: false,
+        errorMessage: error.message
+      })
+    }
   }
 
   return (
