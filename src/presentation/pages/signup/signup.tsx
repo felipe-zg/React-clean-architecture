@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import {
   LoginHeader,
   Input,
+  SubmitButton,
   FormStatus,
   Footer
 } from '@/presentation/components'
@@ -34,37 +35,38 @@ const Signup: React.FC<Props> = ({
     emailError: '',
     passwordError: '',
     passwordConfirmationError: '',
-    errorMessage: ''
+    errorMessage: '',
+    isFormInvalid: true
   })
 
   useEffect(() => {
+    const nameError = validation.validate('name', state.name)
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('password', state.password)
+    const passwordConfirmationError = validation.validate(
+      'passwordConfirmation',
+      state.passwordConfirmation
+    )
     setState({
       ...state,
-      nameError: validation.validate('name', state.name),
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password),
-      passwordConfirmationError: validation.validate(
-        'passwordConfirmation',
-        state.passwordConfirmation
-      )
+      nameError,
+      emailError,
+      passwordError,
+      passwordConfirmationError,
+      isFormInvalid:
+        !!nameError ||
+        !!emailError ||
+        !!passwordError ||
+        !!passwordConfirmationError
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
-
-  const isFormInvalid = (): boolean => {
-    return (
-      !!state.nameError ||
-      !!state.emailError ||
-      !!state.passwordError ||
-      !!state.passwordConfirmationError
-    )
-  }
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault()
     try {
-      if (state.isLoading || isFormInvalid()) return
+      if (state.isLoading || state.isFormInvalid) return
       setState({
         ...state,
         isLoading: true
@@ -109,14 +111,7 @@ const Signup: React.FC<Props> = ({
             name="passwordConfirmation"
             placeholder="Confirme sua senha"
           />
-          <button
-            data-testid="submit-button"
-            disabled={isFormInvalid()}
-            type="submit"
-            className={Styles.submit}
-          >
-            Cadastrar
-          </button>
+          <SubmitButton text="Cadastrar" />
           <Link replace to="/login" data-testid="login" className={Styles.link}>
             Voltar para Login
           </Link>

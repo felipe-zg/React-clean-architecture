@@ -6,6 +6,7 @@ import Context from '@/presentation/context/form/form-context'
 import {
   LoginHeader,
   Input,
+  SubmitButton,
   FormStatus,
   Footer
 } from '@/presentation/components'
@@ -31,14 +32,18 @@ const Login: React.FC<Props> = ({
     password: '',
     emailError: '',
     passwordError: '',
-    errorMessage: ''
+    errorMessage: '',
+    isFormInvalid: true
   })
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('password', state.password)
     setState({
       ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     })
   }, [state.email, state.password])
 
@@ -83,14 +88,7 @@ const Login: React.FC<Props> = ({
             name="password"
             placeholder="Digite sua senha"
           />
-          <button
-            data-testid="submit-button"
-            disabled={!!state.emailError || !!state.passwordError}
-            type="submit"
-            className={Styles.submit}
-          >
-            Entrar
-          </button>
+          <SubmitButton text="Entrar" />
           <Link
             replace
             to="/signup"
