@@ -9,6 +9,7 @@ import {
   waitFor
 } from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
+import { EmailAlreadyExistsError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult
@@ -54,6 +55,14 @@ const simulateValidFormSubmission = async (
   const form = sut.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
+}
+
+const testElementsTextContent = (
+  sut: RenderResult,
+  elementTestId: string,
+  text: string
+): void => {
+  expect(sut.getByTestId(elementTestId).textContent).toBe(text)
 }
 
 describe('Signup', () => {
@@ -160,5 +169,14 @@ describe('Signup', () => {
     const { sut, addAccountSpy } = makeSut({ validationError })
     await simulateValidFormSubmission(sut)
     expect(addAccountSpy.callsCount).toBe(0)
+  })
+
+  it('should show error message if addAccount fails', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const error = new EmailAlreadyExistsError()
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
+    await simulateValidFormSubmission(sut)
+    testElementsTextContent(sut, 'main-error', error.message)
+    helper.testChildCount(sut, 'error-wrap', 1)
   })
 })
