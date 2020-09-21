@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import {
-  LoginHeader,
+  Header,
   Input,
   SubmitButton,
   FormStatus,
@@ -91,7 +91,7 @@ const Signup: React.FC<Props> = ({
 
   return (
     <div className={Styles.signup}>
-      <LoginHeader />
+      <Header />
       <Context.Provider value={{ state, setState }}>
         <form
           data-testid="form"

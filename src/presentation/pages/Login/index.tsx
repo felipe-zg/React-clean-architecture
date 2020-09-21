@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom'
 import Context from '@/presentation/context/form/form-context'
 
 import {
-  LoginHeader,
+  Header,
   Input,
   SubmitButton,
   FormStatus,
@@ -74,7 +74,7 @@ const Login: React.FC<Props> = ({
 
   return (
     <div className={Styles.login}>
-      <LoginHeader />
+      <Header />
       <Context.Provider value={{ state, setState }}>
         <form
           data-testid="form"

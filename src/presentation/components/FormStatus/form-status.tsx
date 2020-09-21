@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import Context from '@/presentation/context/form/form-context'
 
-import Spinner from '@/presentation/components/Spinner'
+import Spinner from '@/presentation/components/Spinner/spinner'
 import Styles from './styles.scss'
 
 const FormStatus: React.FC = () => {
@@ -9,8 +9,12 @@ const FormStatus: React.FC = () => {
 
   return (
     <div data-testid="error-wrap" className={Styles.errorWrap}>
-      {state.isLoading && <Spinner className={Styles.spinner}/>}
-      {state.errorMessage && <span data-testid="main-error" className={Styles.error}>{state.errorMessage}</span>}
+      {state.isLoading && <Spinner className={Styles.spinner} />}
+      {state.errorMessage && (
+        <span data-testid="main-error" className={Styles.error}>
+          {state.errorMessage}
+        </span>
+      )}
     </div>
   )
 }
