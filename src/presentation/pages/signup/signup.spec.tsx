@@ -201,6 +201,15 @@ describe('Signup', () => {
     expect(history.location.pathname).toBe('/')
   })
 
+  it('should show error message if saveAccessToken fails', async () => {
+    const { sut, saveAccessTokenMock } = makeSut()
+    const error = new EmailAlreadyExistsError()
+    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    await simulateValidFormSubmission(sut)
+    helper.testElementsTextContent(sut, 'main-error', error.message)
+    helper.testChildCount(sut, 'error-wrap', 1)
+  })
+
   it('should redirect user to Login page if they click on go back link', () => {
     const { sut } = makeSut()
     fireEvent.click(sut.getByTestId('login'))
