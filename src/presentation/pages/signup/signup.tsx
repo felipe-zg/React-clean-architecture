@@ -11,6 +11,7 @@ import Styles from './styles.scss'
 import Context from '@/presentation/context/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddAccount } from '@/domain/use-cases'
+import { stat } from 'fs/promises'
 
 type Props = {
   validation: Validation
@@ -44,11 +45,20 @@ const Signup: React.FC<Props> = ({ validation, addAccount }: Props) => {
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
+  const isFormInvalid = (): boolean => {
+    return (
+      !!state.nameError ||
+      !!state.emailError ||
+      !!state.passwordError ||
+      !!state.passwordConfirmationError
+    )
+  }
+
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading) return
+    if (state.isLoading || isFormInvalid()) return
     setState({
       ...state,
       isLoading: true
