@@ -213,7 +213,7 @@ describe('Signup', () => {
   it('should redirect user to Login page if they click on go back link', () => {
     const { sut } = makeSut()
     fireEvent.click(sut.getByTestId('login'))
-    expect(history.length).toBe(2)
+    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/login')
   })
 })

@@ -173,7 +173,7 @@ describe('Login', () => {
   it('should redirect user to signup page if they click on register link', () => {
     const { sut } = makeSut()
     fireEvent.click(sut.getByTestId('signup'))
-    expect(history.length).toBe(2)
+    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/signup')
   })
 })
