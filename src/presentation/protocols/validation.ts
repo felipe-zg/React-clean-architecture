@@ -1,3 +1,4 @@
 export interface Validation {
-  validate: (fieldNamme: string, fieldValue: string) => string
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  validate: (fieldNamme: string, data: object) => string
 }

@@ -8,10 +8,11 @@ export class ValidationComposite implements Validation {
     return new ValidationComposite(validators)
   }
 
-  validate(fieldNamme: string, fieldValue: string): string {
-    const validators = this.validators.filter(v => v.field === fieldNamme)
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  validate(field: string, data: object): string {
+    const validators = this.validators.filter((v) => v.field === field)
     for (const validator of validators) {
-      const error = validator.validate(fieldValue)
+      const error = validator.validate(data)
       if (error) {
         return error.message
       }

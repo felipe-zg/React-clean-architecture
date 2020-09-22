@@ -3,7 +3,8 @@ import { RequiredFieldError } from '@/validation/erros'
 
 export class RequiredFieldValidation implements FieldValidation {
   constructor(readonly field: string) {}
-  validate(value: string): Error {
-    return value ? null : new RequiredFieldError()
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  validate(data: object): Error {
+    return data[this.field] ? null : new RequiredFieldError()
   }
 }

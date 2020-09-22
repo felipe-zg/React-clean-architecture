@@ -4,7 +4,10 @@ import { InvalidFieldError } from '@/validation/erros/invalid-field-error'
 export class MinLengthValidation implements FieldValidation {
   constructor(readonly field: string, private readonly minLength: number) {}
 
-  validate(value: string): Error {
-    return value.length >= this.minLength ? null : new InvalidFieldError()
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  validate(data: object): Error {
+    return data[this.field]?.length < this.minLength
+      ? new InvalidFieldError()
+      : null
   }
 }
