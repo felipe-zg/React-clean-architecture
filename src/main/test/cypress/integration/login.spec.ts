@@ -81,4 +81,24 @@ describe('Login', () => {
       assert.isOk(window.localStorage.getItem('accessToken'))
     )
   })
+
+  it('should return UnexpectedError if response returns invalid data', () => {
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 200,
+      response: {
+        invalidProperty: faker.random.uuid()
+      }
+    })
+    cy.getByTestId('email').focus().type('mango@gmail.com')
+    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('submit-button').click()
+    cy.getByTestId('spinner').should('not.exist')
+    cy.getByTestId('main-error').should(
+      'contain.text',
+      'Algo deu errado, tente de novo em breve!'
+    )
+    cy.url().should('eq', `${baseUrl}/login`)
+  })
 })
