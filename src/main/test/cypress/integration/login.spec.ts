@@ -62,24 +62,24 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
-  it('should save access token if credentials are invalid', () => {
+  it('should show UnexpectedError if any other error occurs', () => {
     cy.route({
       method: 'POST',
       url: /login/,
-      status: 200,
+      status: 400, // change to use faker with a set o numbers
       response: {
-        accessToken: faker.random.uuid()
+        error: faker.random.words()
       }
     })
-    cy.getByTestId('email').focus().type('mango@gmail.com')
-    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').click()
     cy.getByTestId('spinner').should('not.exist')
-    cy.getByTestId('main-error').should('not.exist')
-    cy.url().should('eq', `${baseUrl}/`)
-    cy.window().then((window) =>
-      assert.isOk(window.localStorage.getItem('accessToken'))
+    cy.getByTestId('main-error').should(
+      'contain.text',
+      'Algo deu errado, tente de novo em breve!'
     )
+    cy.url().should('eq', `${baseUrl}/login`)
   })
 
   it('should return UnexpectedError if response returns invalid data', () => {
@@ -100,5 +100,25 @@ describe('Login', () => {
       'Algo deu errado, tente de novo em breve!'
     )
     cy.url().should('eq', `${baseUrl}/login`)
+  })
+
+  it('should save access token if credentials are invalid', () => {
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 200,
+      response: {
+        accessToken: faker.random.uuid()
+      }
+    })
+    cy.getByTestId('email').focus().type('mango@gmail.com')
+    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('submit-button').click()
+    cy.getByTestId('spinner').should('not.exist')
+    cy.getByTestId('main-error').should('not.exist')
+    cy.url().should('eq', `${baseUrl}/`)
+    cy.window().then((window) =>
+      assert.isOk(window.localStorage.getItem('accessToken'))
+    )
   })
 })
