@@ -7,7 +7,7 @@ import Context from '@/presentation/context/form/form-context'
 const makeSut = (field: string): RenderResult => {
   return render(
     <Context.Provider value={{ state: {} }}>
-      <Input name={field}/>
+      <Input name={field} />
     </Context.Provider>
   )
 }
@@ -25,5 +25,14 @@ describe('Input component', () => {
     const input = sut.getByTestId(field) as HTMLInputElement
     fireEvent.focus(input)
     expect(input.readOnly).toBe(false)
+  })
+
+  it('should focus input on label click', () => {
+    const field = faker.database.column()
+    const sut = makeSut(field)
+    const input = sut.getByTestId(field)
+    const label = sut.getByTestId(`${field}-label`)
+    fireEvent.click(label)
+    expect(document.activeElement).toBe(input)
   })
 })
