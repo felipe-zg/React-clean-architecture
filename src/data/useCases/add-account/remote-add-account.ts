@@ -6,7 +6,10 @@ import { AddAccount, AddAccountParams } from '@/domain/use-cases'
 export class RemoteAddAccount implements AddAccount {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<AddAccountParams, AccountModel>
+    private readonly httpPostClient: HttpPostClient<
+    AddAccountParams,
+    AccountModel
+    >
   ) {}
 
   async add(params: AddAccountParams): Promise<AccountModel> {
@@ -20,11 +23,9 @@ export class RemoteAddAccount implements AddAccount {
         return httpResponse.body
       case HttpStatusCode.forbidden:
         throw new EmailAlreadyExistsError()
-      case HttpStatusCode.badRequest:
-      case HttpStatusCode.serverError:
-        throw new UnexpectedError()
+
       default:
-        return null
+        throw new UnexpectedError()
     }
   }
 }
