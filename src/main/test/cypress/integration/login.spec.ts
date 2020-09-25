@@ -1,4 +1,6 @@
 import faker from 'faker'
+import { testInputStatus } from '../support/form-helper'
+
 const baseUrl: string = Cypress.config().baseUrl
 
 describe('Login', () => {
@@ -7,62 +9,28 @@ describe('Login', () => {
     cy.visit('login')
   })
   it('should start with correct state', () => {
-    cy.getByTestId('email-wrap').should('have.attr', 'data-status', 'invalid')
-    cy.getByTestId('email')
-      .should('have.attr', 'title', 'Campo obrigatório')
-      .should('have.attr', 'readonly')
-    cy.getByTestId('email-label').should(
-      'have.attr',
-      'title',
-      'Campo obrigatório'
-    )
-    cy.getByTestId('password-wrap').should(
-      'have.attr',
-      'data-status',
-      'invalid'
-    )
-    cy.getByTestId('password')
-      .should('have.attr', 'title', 'Campo obrigatório')
-      .should('have.attr', 'readonly')
-    cy.getByTestId('password-label').should(
-      'have.attr',
-      'title',
-      'Campo obrigatório'
-    )
+    cy.getByTestId('email').should('have.attr', 'readonly')
+    testInputStatus('email', 'Campo obrigatório')
+    cy.getByTestId('password').should('have.attr', 'readonly')
+    testInputStatus('password', 'Campo obrigatório')
     cy.getByTestId('submit-button').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
 
   it('it should present error if form is invalid', () => {
     cy.getByTestId('email').focus().type(faker.random.word())
-    cy.getByTestId('email-wrap').should('have.attr', 'data-status', 'invalid')
-    cy.getByTestId('email').should('have.attr', 'title', 'Valor inválido')
-    cy.getByTestId('email-label').should('have.attr', 'title', 'Valor inválido')
+    testInputStatus('email', 'Valor inválido')
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(4))
-    cy.getByTestId('password-wrap').should(
-      'have.attr',
-      'data-status',
-      'invalid'
-    )
-    cy.getByTestId('password').should('have.attr', 'title', 'Valor inválido')
-    cy.getByTestId('password-label').should(
-      'have.attr',
-      'title',
-      'Valor inválido'
-    )
+    testInputStatus('password', 'Valor inválido')
     cy.getByTestId('submit-button').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
 
   it('should show valid state if form is valid', () => {
     cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('email-wrap').should('have.attr', 'data-status', 'valid')
-    cy.getByTestId('email').should('not.have.attr', 'title')
-    cy.getByTestId('email-label').should('not.have.attr', 'title')
+    testInputStatus('email')
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-    cy.getByTestId('password-wrap').should('have.attr', 'data-status', 'valid')
-    cy.getByTestId('password').should('not.have.attr', 'title')
-    cy.getByTestId('password-label').should('not.have.attr', 'title')
+    testInputStatus('password')
     cy.getByTestId('submit-button').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
