@@ -91,8 +91,8 @@ describe('Login', () => {
         invalidProperty: faker.random.uuid()
       }
     })
-    cy.getByTestId('email').focus().type('mango@gmail.com')
-    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').click()
     cy.getByTestId('spinner').should('not.exist')
     cy.getByTestId('main-error').should(
@@ -102,7 +102,7 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
-  it('should save access token if credentials are invalid', () => {
+  it('should save access token if credentials are valid', () => {
     cy.route({
       method: 'POST',
       url: /login/,
@@ -111,8 +111,8 @@ describe('Login', () => {
         accessToken: faker.random.uuid()
       }
     })
-    cy.getByTestId('email').focus().type('mango@gmail.com')
-    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').click()
     cy.getByTestId('spinner').should('not.exist')
     cy.getByTestId('main-error').should('not.exist')
@@ -134,7 +134,6 @@ describe('Login', () => {
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').dblclick()
-
     cy.get('@request.all').should('have.length', 1)
   })
 })
