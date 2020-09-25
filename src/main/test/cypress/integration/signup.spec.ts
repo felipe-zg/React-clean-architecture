@@ -1,9 +1,10 @@
 import faker from 'faker'
 import * as helper from '../support/form-helper'
+import * as http from '../support/signup-mocks'
 
 const simulateValidForm = (): void => {
   const password = faker.random.alphaNumeric(5)
-  cy.getByTestId('name').focus().type(faker.random.words())
+  cy.getByTestId('name').focus().type(faker.random.alphaNumeric(5))
   cy.getByTestId('email').focus().type(faker.internet.email())
   cy.getByTestId('password').focus().type(password)
   cy.getByTestId('passwordConfirmation').focus().type(password)
@@ -16,6 +17,11 @@ const simulateInvalidForm = (): void => {
   cy.getByTestId('passwordConfirmation')
     .focus()
     .type(faker.random.alphaNumeric(4))
+}
+
+const simulateValidSubmit = (): void => {
+  simulateValidForm()
+  cy.getByTestId('submit-button').click()
 }
 
 describe('Signup', () => {
@@ -53,5 +59,12 @@ describe('Signup', () => {
     helper.testInputStatus('passwordConfirmation')
     cy.getByTestId('submit-button').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
+  })
+
+  it('should show error if email already exists', () => {
+    http.mockRequestWithEmailAlreadyExistsError()
+    simulateValidSubmit()
+    helper.testMainError('E-mail já cadastrado')
+    helper.testUrl('/signup')
   })
 })

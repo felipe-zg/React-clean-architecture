@@ -12,6 +12,18 @@ export const mockRequestWithInvalidCredentialsError = (url: RegExp): void => {
   }).as('request')
 }
 
+export const mockRequestWithEmailAlreadyExistsError = (url: RegExp): void => {
+  cy.server()
+  cy.route({
+    method: 'POST',
+    url,
+    status: 403,
+    response: {
+      error: faker.random.words()
+    }
+  }).as('request')
+}
+
 export const mockRequestWithUnexpectedError = (
   method: string,
   url: RegExp
