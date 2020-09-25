@@ -10,7 +10,6 @@ const simulateValidSubmit = (): void => {
 
 describe('Login', () => {
   beforeEach(() => {
-    cy.server()
     cy.visit('login')
   })
   it('should start with correct state', () => {
