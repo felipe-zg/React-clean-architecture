@@ -7,21 +7,21 @@ import {
 
 import faker from 'faker'
 
-export class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
+export class HttpPostClientSpy<R> implements HttpPostClient<R> {
   url?: string
-  body?: T
+  body?: any
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok
   }
 
-  async post(params: HttpPostClientParams<T>): Promise<HttpResponse<R>> {
+  async post(params: HttpPostClientParams): Promise<HttpResponse<R>> {
     this.url = params.url
     this.body = params.body
     return Promise.resolve(this.response)
   }
 }
 
-export const mockPostRequest = (): HttpPostClientParams<any> => ({
+export const mockPostRequest = (): HttpPostClientParams => ({
   url: faker.internet.url(),
   body: faker.random.objectElement()
 })
