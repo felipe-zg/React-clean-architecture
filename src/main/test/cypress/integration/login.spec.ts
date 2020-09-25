@@ -1,5 +1,6 @@
 import faker from 'faker'
 import { testInputStatus } from '../support/form-helper'
+import * as http from './login-mocks'
 
 const baseUrl: string = Cypress.config().baseUrl
 
@@ -36,14 +37,7 @@ describe('Login', () => {
   })
 
   it('should show error if credentials are invalid', () => {
-    cy.route({
-      method: 'POST',
-      url: /login/,
-      status: 401,
-      response: {
-        error: faker.random.words()
-      }
-    })
+    http.mockRequestWithInvalidCredentialsError()
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').click()
@@ -53,14 +47,7 @@ describe('Login', () => {
   })
 
   it('should show UnexpectedError if any other error occurs', () => {
-    cy.route({
-      method: 'POST',
-      url: /login/,
-      status: 400, // change to use faker with a set o numbers
-      response: {
-        error: faker.random.words()
-      }
-    })
+    http.mockRequestWithUnexpectedError()
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').click()
@@ -73,14 +60,7 @@ describe('Login', () => {
   })
 
   it('should return UnexpectedError if response returns invalid data', () => {
-    cy.route({
-      method: 'POST',
-      url: /login/,
-      status: 200,
-      response: {
-        invalidProperty: faker.random.uuid()
-      }
-    })
+    http.mockRequestWithInvalidResponseData()
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password')
       .focus()
@@ -95,27 +75,13 @@ describe('Login', () => {
   })
 
   it('should not call submit if form is invalid', () => {
-    cy.route({
-      method: 'POST',
-      url: /login/,
-      status: 200,
-      response: {
-        accessToken: faker.random.uuid()
-      }
-    }).as('request')
+    http.mockRequestWithStatusOK()
     cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
     cy.get('@request.all').should('have.length', 0)
   })
 
   it('should save access token if credentials are valid', () => {
-    cy.route({
-      method: 'POST',
-      url: /login/,
-      status: 200,
-      response: {
-        accessToken: faker.random.uuid()
-      }
-    })
+    http.mockRequestWithStatusOK()
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').click()
@@ -128,14 +94,7 @@ describe('Login', () => {
   })
 
   it('should prevent multiple submits', () => {
-    cy.route({
-      method: 'POST',
-      url: /login/,
-      status: 200,
-      response: {
-        accessToken: faker.random.uuid()
-      }
-    }).as('request')
+    http.mockRequestWithStatusOK()
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit-button').dblclick()
