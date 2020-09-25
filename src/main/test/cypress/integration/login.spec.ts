@@ -104,6 +104,19 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
+  it('should not call submit if form is invalid', () => {
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 200,
+      response: {
+        accessToken: faker.random.uuid()
+      }
+    }).as('request')
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+    cy.get('@request.all').should('have.length', 0)
+  })
+
   it('should save access token if credentials are valid', () => {
     cy.route({
       method: 'POST',
