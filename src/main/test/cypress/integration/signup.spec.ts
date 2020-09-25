@@ -80,4 +80,12 @@ describe('Signup', () => {
     cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
     helper.testRequestCallsCount(0)
   })
+
+  it('should save access token if credentials are valid', () => {
+    http.mockRequestWithStatusOK()
+    simulateValidSubmit()
+    cy.getByTestId('error-wrap').should('not.have.descendants')
+    helper.testUrl('/')
+    helper.testLocalstorageItem('accessToken')
+  })
 })
