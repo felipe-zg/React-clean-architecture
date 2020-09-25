@@ -74,4 +74,10 @@ describe('Signup', () => {
     helper.testMainError('Algo deu errado, tente de novo em breve!')
     helper.testUrl('/signup')
   })
+
+  it('should not call submit if form is invalid', () => {
+    http.mockRequestWithStatusOK()
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+    helper.testRequestCallsCount(0)
+  })
 })

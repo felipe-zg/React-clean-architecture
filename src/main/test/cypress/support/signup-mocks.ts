@@ -1,3 +1,4 @@
+import faker from 'faker'
 import * as http from './http-mocks'
 
 export const mockRequestWithEmailAlreadyExistsError = (): void =>
@@ -5,3 +6,8 @@ export const mockRequestWithEmailAlreadyExistsError = (): void =>
 
 export const mockRequestWithUnexpectedError = (): void =>
   http.mockRequestWithUnexpectedError('POST', /signup/)
+
+export const mockRequestWithStatusOK = (): void =>
+  http.mockRequestWithStatusOK('POST', /signup/, {
+    accessToken: faker.random.uuid()
+  })
