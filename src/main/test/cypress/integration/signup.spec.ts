@@ -88,4 +88,11 @@ describe('Signup', () => {
     helper.testUrl('/')
     helper.testLocalstorageItem('accessToken')
   })
+
+  it('should prevent multiple submits', () => {
+    http.mockRequestWithStatusOK()
+    simulateValidForm()
+    cy.getByTestId('submit-button').dblclick()
+    helper.testRequestCallsCount(1)
+  })
 })
