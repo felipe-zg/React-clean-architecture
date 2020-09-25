@@ -75,6 +75,13 @@ describe('Signup', () => {
     helper.testUrl('/signup')
   })
 
+  it('should return UnexpectedError if response returns invalid data', () => {
+    http.mockRequestWithInvalidResponseData()
+    simulateValidSubmit()
+    helper.testMainError('Algo deu errado, tente de novo em breve!')
+    helper.testUrl('/signup')
+  })
+
   it('should not call submit if form is invalid', () => {
     http.mockRequestWithStatusOK()
     cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
