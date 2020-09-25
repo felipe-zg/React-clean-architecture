@@ -67,4 +67,11 @@ describe('Signup', () => {
     helper.testMainError('E-mail já cadastrado')
     helper.testUrl('/signup')
   })
+
+  it('should show UnexpectedError if any other error occurs', () => {
+    http.mockRequestWithUnexpectedError()
+    simulateValidSubmit()
+    helper.testMainError('Algo deu errado, tente de novo em breve!')
+    helper.testUrl('/signup')
+  })
 })
