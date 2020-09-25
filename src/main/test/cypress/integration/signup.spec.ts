@@ -1,6 +1,23 @@
 import faker from 'faker'
 import * as helper from '../support/form-helper'
 
+const simulateValidForm = (): void => {
+  const password = faker.random.alphaNumeric(5)
+  cy.getByTestId('name').focus().type(faker.random.words())
+  cy.getByTestId('email').focus().type(faker.internet.email())
+  cy.getByTestId('password').focus().type(password)
+  cy.getByTestId('passwordConfirmation').focus().type(password)
+}
+
+const simulateInvalidForm = (): void => {
+  cy.getByTestId('name').focus().type(faker.random.alphaNumeric(4))
+  cy.getByTestId('email').focus().type(faker.random.word())
+  cy.getByTestId('password').focus().type(faker.random.alphaNumeric(4))
+  cy.getByTestId('passwordConfirmation')
+    .focus()
+    .type(faker.random.alphaNumeric(4))
+}
+
 describe('Signup', () => {
   beforeEach(() => {
     cy.visit('signup')
@@ -19,29 +36,20 @@ describe('Signup', () => {
   })
 
   it('it should present error if form is invalid', () => {
-    cy.getByTestId('name').focus().type(faker.random.alphaNumeric(4))
+    simulateInvalidForm()
     helper.testInputStatus('name', 'Valor inválido')
-    cy.getByTestId('email').focus().type(faker.random.word())
     helper.testInputStatus('email', 'Valor inválido')
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(4))
     helper.testInputStatus('password', 'Valor inválido')
-    cy.getByTestId('passwordConfirmation')
-      .focus()
-      .type(faker.random.alphaNumeric(4))
     helper.testInputStatus('passwordConfirmation', 'Valor inválido')
     cy.getByTestId('submit-button').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
 
   it('should show valid state if form is valid', () => {
-    const password = faker.random.alphaNumeric(5)
-    cy.getByTestId('name').focus().type(faker.random.words())
+    simulateValidForm()
     helper.testInputStatus('name')
-    cy.getByTestId('email').focus().type(faker.internet.email())
     helper.testInputStatus('email')
-    cy.getByTestId('password').focus().type(password)
     helper.testInputStatus('password')
-    cy.getByTestId('passwordConfirmation').focus().type(password)
     helper.testInputStatus('passwordConfirmation')
     cy.getByTestId('submit-button').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
