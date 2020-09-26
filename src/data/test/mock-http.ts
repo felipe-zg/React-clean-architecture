@@ -2,10 +2,17 @@ import {
   HttpResponse,
   HttpStatusCode,
   HttpPostClient,
-  HttpPostClientParams
+  HttpPostClientParams,
+  HttpGetClient,
+  HttpGetParams
 } from '@/data/protocols/http'
 
 import faker from 'faker'
+
+export const mockPostRequest = (): HttpPostClientParams => ({
+  url: faker.internet.url(),
+  body: faker.random.objectElement()
+})
 
 export class HttpPostClientSpy<R> implements HttpPostClient<R> {
   url?: string
@@ -21,7 +28,10 @@ export class HttpPostClientSpy<R> implements HttpPostClient<R> {
   }
 }
 
-export const mockPostRequest = (): HttpPostClientParams => ({
-  url: faker.internet.url(),
-  body: faker.random.objectElement()
-})
+export class HttpGetClientSpy implements HttpGetClient {
+  url: string
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async get(params: HttpGetParams): Promise<void> {
+    this.url = params.url
+  }
+}
