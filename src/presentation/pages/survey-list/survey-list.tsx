@@ -1,6 +1,10 @@
 import React from 'react'
-import { Footer, LoggedInHeader } from '@/presentation/components'
-import { ThumbsDown } from '@/presentation/assets/icons/base-64/thumbs-down'
+import {
+  Footer,
+  Icon,
+  IconName,
+  LoggedInHeader
+} from '@/presentation/components'
 import Styles from './styles.scss'
 
 const SurveyList: React.FC = () => {
@@ -12,9 +16,7 @@ const SurveyList: React.FC = () => {
         <ul>
           <li>
             <div className={Styles.surveyContent}>
-              <div className={[Styles.iconWrap, Styles.red].join(' ')}>
-                <img src={ThumbsDown} />
-              </div>
+              <Icon iconName={IconName.thumbsUp} className={Styles.iconWrap} />
               <time>
                 <span className={Styles.day}>22</span>
                 <span className={Styles.month}>03</span>
