@@ -12,7 +12,7 @@ const Router: React.FC<Factory> = (factory: Factory) => {
     <BrowserRouter>
       <Route path="/login" component={factory.makeLogin} />
       <Route path="/signup" component={factory.makeSignup} />
-      <Route path="/" component={SurveyList} />
+      <Route path="/" exact component={SurveyList} />
     </BrowserRouter>
   )
 }
