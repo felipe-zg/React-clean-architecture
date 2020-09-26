@@ -1,6 +1,6 @@
 @import '../../styles/colors.scss';
 
-.header {
+.headerWrap {
   display: flex;
   flex-direction: column;
   border-top: 40px solid $primaryDark;
@@ -18,7 +18,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .header {
+  .headerWrap {
     border-top: 20px solid $primaryDark;
   }
 }
