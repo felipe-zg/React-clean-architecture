@@ -1,5 +1,6 @@
 export { default as Logo } from './Logo/logo'
 export { default as Header } from './header/header'
+export { default as LoggedInHeader } from './logged-in-header/logged-in-header'
 export { default as Input } from './Input/input'
 export { default as SubmitButton } from './SubmitButton/submit-button'
 export { default as FormStatus } from './FormStatus/form-status'
