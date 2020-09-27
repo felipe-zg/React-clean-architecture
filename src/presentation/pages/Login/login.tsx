@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
-import Context from '@/presentation/context/form/form-context'
+import { FormContext, ApiContext } from '@/presentation/context'
 
 import {
   Header,
@@ -12,20 +12,16 @@ import {
 } from '@/presentation/components'
 import Styles from './styles.scss'
 import { Validation } from '@/presentation/protocols/validation'
-import { Authentication, UpdateCurrentAccount } from '@/domain/use-cases'
+import { Authentication } from '@/domain/use-cases'
 
 type Props = {
   validation: Validation
   authentication: Authentication
-  updateCurrentAccount: UpdateCurrentAccount
 }
 
-const Login: React.FC<Props> = ({
-  validation,
-  authentication,
-  updateCurrentAccount
-}: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const history = useHistory()
+  const { setCurrentAccount } = useContext(ApiContext)
   const [state, setState] = useState({
     isLoading: false,
     email: '',
@@ -63,7 +59,7 @@ const Login: React.FC<Props> = ({
         email: state.email,
         password: state.password
       })
-      await updateCurrentAccount.save(account)
+      setCurrentAccount(account)
       history.replace('/')
     } catch (error) {
       setState({
@@ -77,7 +73,7 @@ const Login: React.FC<Props> = ({
   return (
     <div className={Styles.loginWrap}>
       <Header />
-      <Context.Provider value={{ state, setState }}>
+      <FormContext.Provider value={{ state, setState }}>
         <form
           data-testid="form"
           className={Styles.form}
@@ -101,7 +97,7 @@ const Login: React.FC<Props> = ({
           </Link>
           <FormStatus />
         </form>
-      </Context.Provider>
+      </FormContext.Provider>
       <Footer />
     </div>
   )

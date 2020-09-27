@@ -1,3 +1,4 @@
 export interface SetStorage {
-  set: (key: string, value: any) => void
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  set: (key: string, value: object) => void
 }
