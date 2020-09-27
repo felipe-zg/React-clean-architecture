@@ -6,7 +6,7 @@ import { createMemoryHistory } from 'history'
 import {
   AddAccountSpy,
   helper,
-  SaveAccessTokenMock,
+  UpdateCurrentAccountMock,
   ValidationStub
 } from '@/presentation/test'
 import {
@@ -22,7 +22,7 @@ import { EmailAlreadyExistsError } from '@/domain/errors'
 type SutTypes = {
   sut: RenderResult
   addAccountSpy: AddAccountSpy
-  saveAccessTokenMock: SaveAccessTokenMock
+  updateCurrentAccountMock: UpdateCurrentAccountMock
 }
 
 type SutParams = {
@@ -35,20 +35,20 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
-  const saveAccessTokenMock = new SaveAccessTokenMock()
+  const updateCurrentAccountMock = new UpdateCurrentAccountMock()
   const sut = render(
     <Router history={history}>
       <SignUp
         validation={validationStub}
         addAccount={addAccountSpy}
-        saveAccessToken={saveAccessTokenMock}
+        updateCurrentAccount={updateCurrentAccountMock}
       />
     </Router>
   )
   return {
     sut,
     addAccountSpy,
-    saveAccessTokenMock
+    updateCurrentAccountMock
   }
 }
 
@@ -191,20 +191,18 @@ describe('Signup', () => {
     helper.testChildCount(sut, 'error-wrap', 1)
   })
 
-  it('should call SaveAccessToken and redirect user to home page if AddAccount succeeds', async () => {
-    const { sut, addAccountSpy, saveAccessTokenMock } = makeSut()
+  it('should call upadateCurrentAccount and redirect user to home page if AddAccount succeeds', async () => {
+    const { sut, addAccountSpy, updateCurrentAccountMock } = makeSut()
     await simulateValidFormSubmission(sut)
-    expect(saveAccessTokenMock.accessToken).toEqual(
-      addAccountSpy.account.accessToken
-    )
+    expect(updateCurrentAccountMock.account).toEqual(addAccountSpy.account)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
 
   it('should show error message if saveAccessToken fails', async () => {
-    const { sut, saveAccessTokenMock } = makeSut()
+    const { sut, updateCurrentAccountMock } = makeSut()
     const error = new EmailAlreadyExistsError()
-    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    jest.spyOn(updateCurrentAccountMock, 'save').mockRejectedValueOnce(error)
     await simulateValidFormSubmission(sut)
     helper.testElementsTextContent(sut, 'main-error', error.message)
     helper.testChildCount(sut, 'error-wrap', 1)

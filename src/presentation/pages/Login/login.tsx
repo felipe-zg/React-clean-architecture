@@ -12,18 +12,18 @@ import {
 } from '@/presentation/components'
 import Styles from './styles.scss'
 import { Validation } from '@/presentation/protocols/validation'
-import { Authentication, SaveAccessToken } from '@/domain/use-cases'
+import { Authentication, UpdateCurrentAccount } from '@/domain/use-cases'
 
 type Props = {
   validation: Validation
   authentication: Authentication
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 }
 
 const Login: React.FC<Props> = ({
   validation,
   authentication,
-  saveAccessToken
+  updateCurrentAccount
 }: Props) => {
   const history = useHistory()
   const [state, setState] = useState({
@@ -63,7 +63,7 @@ const Login: React.FC<Props> = ({
         email: state.email,
         password: state.password
       })
-      await saveAccessToken.save(account.accessToken)
+      await updateCurrentAccount.save(account)
       history.replace('/')
     } catch (error) {
       setState({

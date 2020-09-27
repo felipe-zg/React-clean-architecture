@@ -9,7 +9,8 @@ export const mockRequestWithUnexpectedError = (): void =>
 
 export const mockRequestWithStatusOK = (): void =>
   http.mockRequestWithStatusOK('POST', /login/, {
-    accessToken: faker.random.uuid()
+    accessToken: faker.random.uuid(),
+    name: faker.name.findName()
   })
 
 export const mockRequestWithInvalidResponseData = (): void =>

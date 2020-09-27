@@ -71,7 +71,7 @@ describe('Login', () => {
     simulateValidSubmit()
     cy.getByTestId('error-wrap').should('not.have.descendants')
     helper.testUrl('/')
-    helper.testLocalstorageItem('accessToken')
+    helper.testLocalstorageItem('account')
   })
 
   it('should prevent multiple submits', () => {

@@ -1,7 +1,7 @@
-import { SaveAccessToken } from '@/domain/use-cases'
-import { LocalSaveAccessToken } from '@/data/useCases/save-access-token/local-save-access-token'
+import { UpdateCurrentAccount } from '@/domain/use-cases'
+import { LocalUpdateCurrentAccount } from '@/data/useCases/update-current-account/local-update-current-account'
 import { makeLocalStorageAdapter } from '../../cache/local-storage-adapter-factory'
 
-export const makeLocalSaveAccessToken = (): SaveAccessToken => {
-  return new LocalSaveAccessToken(makeLocalStorageAdapter())
+export const makeUpdateCurrentAccount = (): UpdateCurrentAccount => {
+  return new LocalUpdateCurrentAccount(makeLocalStorageAdapter())
 }
