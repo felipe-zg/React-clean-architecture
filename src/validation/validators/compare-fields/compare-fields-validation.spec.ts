@@ -13,13 +13,13 @@ describe('CompareFieldsValidation', () => {
     const fieldToCompare = faker.database.column()
     const sut = makeSut(field, fieldToCompare)
     const error = sut.validate({
-      [field]: faker.random.word(),
-      [fieldToCompare]: faker.random.word()
+      [field]: faker.random.words(6),
+      [fieldToCompare]: faker.random.words(7)
     })
     expect(error).toEqual(new InvalidFieldError())
   })
 
-  it('Should return falsy if fields are  equal', () => {
+  it('Should return falsy if fields are equal', () => {
     const field = faker.database.column()
     const fieldToCompare = faker.database.column()
     const value = faker.random.word()
