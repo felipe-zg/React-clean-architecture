@@ -1,4 +1,5 @@
 export { default as Logo } from './Logo/logo'
+export { default as PrivateRoute } from './private-route/private-route'
 export { default as Header } from './header/header'
 export { default as LoggedInHeader } from './logged-in-header/logged-in-header'
 export { default as Icon, IconName } from './icon/icon'
